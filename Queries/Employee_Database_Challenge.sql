@@ -23,13 +23,25 @@ LEFT JOIN titles as t
 ON rt.emp_no = t.emp_no
 ORDER BY emp_no;
 
-SELECT DISTINCT ON (titles.title)employees.emp_no,
-	employees.first_name,
-	employees.last_name,
-	titles.title,
-	titles.from_date,
-	titles.to_date
-INTO retirement_titles
-FROM employees as e 
-WHERE epmployees.birth_date
-ORDER BY , DESC;
+-- Use Dictinct with Orderby to remove duplicate rows
+SELECT DISTINCT ON (rtf.emp_no) rtf.emp_no,
+	rtf.first_name,
+	rtf.last_name,
+	rtf.title
+INTO unique_titles
+FROM retirement_titles_final as rtf
+WHERE (to_date BETWEEN '9999-01-01' AND '9999-01-01')
+ORDER BY rtf.emp_no ASC, to_date DESC;
+
+-- Check the table
+SELECT * FROM unique_titles;
+
+--Title count
+SELECT (count(title)), ut.title
+INTO retiring_titles
+FROM unique_titles as ut
+GROUP BY ut.title
+ORDER BY count(title) DESC;
+
+-- Check the table
+SELECT * FROM retiring_titles;
